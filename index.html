@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#181818" />
+  <title>ZIGFT Outreach — Agency OS</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-canvas: #181818;
+      --bg-card: #212121;
+      --bg-card-hover: #262626;
+      --bg-input: #191919;
+      --bg-pill-active: #2E2E2E;
+      --border-hairline: #2E2E2E;
+      --border-focus: #4A4A4E;
+      --text-primary: #F4F4F5;
+      --text-secondary: #9A9AA0;
+      --text-muted: #6E6E75;
+      --accent-green: #22C55E;
+      --accent-green-bg: rgba(34, 197, 94, 0.12);
+      --danger: #EF4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ================= LUXURY LOADING SCREEN ================= */
+    #zigft-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(circle at 50% 42%, #242427 0%, #141414 68%, #0E0E0F 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s ease;
+    }
+
+    #zigft-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-emblem-wrap {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .loader-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-top-color: #F4F4F5;
+      animation: spinLuxury 1.2s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+    }
+
+    .loader-ring-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom-color: rgba(244, 244, 245, 0.45);
+      animation: spinReverse 1.8s linear infinite;
+    }
+
+    .loader-logo-box {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #1C1C1E;
+      border: 1px solid #323236;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+    }
+
+    .loader-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .loader-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
+
+    .loader-sub {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .loader-bar-track {
+      width: 160px;
+      height: 2px;
+      background: #262629;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 22px;
+    }
+
+    .loader-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #71717A, #F4F4F5);
+      border-radius: 99px;
+      animation: loadSweep 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes spinLuxury { to { transform: rotate(360deg); } }
+    @keyframes spinReverse { to { transform: rotate(-360deg); } }
+    @keyframes loadSweep { to { width: 100%; } }
+
+    /* ================= LAYOUT & HEADER (ZMINDSET STYLE) ================= */
+    .app-shell {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 18px 90px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #222224;
+      border: 1px solid #343438;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .brand-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .sync-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 99px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    /* Pill Navigation */
+    .nav-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 24px;
+      scrollbar-width: none;
+    }
+    .nav-pills::-webkit-scrollbar { display: none; }
+
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+
+    .nav-pill:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-pill.active {
+      background: var(--bg-pill-active);
+      border-color: #3A3A3E;
+      color: var(--text-primary);
+    }
+
+    .nav-pill svg {
+      width: 15px;
+      height: 15px;
+      opacity: 0.85;
+    }
+
+    /* Hero Greeting */
+    .hero-section {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .date-kicker {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .hero-sub {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: 1px solid #E4E4E7;
+      background: #F4F4F5;
+      color: #141414;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-hairline);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-focus);
+    }
+
+    .btn-danger {
+      color: #FCA5A5;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Zmindset Metric Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .metric-foot {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Section Header */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* History Cards */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 16px 18px;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .history-card:hover {
+      border-color: var(--border-focus);
+      background: var(--bg-card-hover);
+    }
+
+    .hc-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .hc-studio {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .hc-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: #2B2B2F;
+      border: 1px solid #3B3B40;
+      color: #D4D4D8;
+      white-space: nowrap;
+    }
+
+    .hc-meta {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .hc-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Forms */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: #636369;
+    }
+
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    /* Option Choice Buttons (Jam & Study Case) */
+    .choice-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      padding: 10px 14px;
+      border-radius: 11px;
+      border: 1px solid var(--border-hairline);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .choice-btn:hover {
+      border-color: var(--border-focus);
+      color: var(--text-primary);
+    }
+
+    .choice-btn.selected {
+      background: #2E2E32;
+      border-color: #F4F4F5;
+      color: var(--text-primary);
+    }
+
+    /* Rendered Chat Bubbles */
+    .bubbles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .bubble-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .bubble-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #2A2A2D;
+    }
+
+    .bubble-tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #36363A;
+      background: #28282C;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-green-bg);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .bubble-body {
+      font-size: 13.5px;
+      color: #E4E4E7;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      background: var(--bg-input);
+      border: 1px solid #27272A;
+      border-radius: 12px;
+      padding: 13px;
+    }
+
+    /* Placeholder Helper Chips */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .token-chip {
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #27272A;
+      border: 1px solid #3A3A3F;
+      color: #D4D4D8;
+      cursor: pointer;
+    }
+
+    .token-chip:hover {
+      border-color: #F4F4F5;
+    }
+
+    /* Views */
+    .view-panel { display: none; }
+    .view-panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 36px 20px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-hairline);
+      border-radius: 16px;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= LUXURY LOADING SCREEN ================= -->
+  <div id="zigft-loader">
+    <div class="loader-emblem-wrap">
+      <div class="loader-ring"></div>
+      <div class="loader-ring-inner"></div>
+      <div class="loader-logo-box" id="loader-logo-container"></div>
+    </div>
+    <div class="loader-title" id="loader-app-title">ZIGFT STUDIO</div>
+    <div class="loader-sub">OUTREACH OPERATING SYSTEM</div>
+    <div class="loader-bar-track">
+      <div class="loader-bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APPLICATION SHELL ================= -->
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="top-bar">
+      <div class="brand-cluster">
+        <div class="brand-avatar" id="header-logo-container"></div>
+        <div>
+          <div class="brand-name" id="header-app-name">ZIGFT Outreach</div>
+          <div class="brand-tag" id="header-app-tag">AGENCY OS</div>
+        </div>
+      </div>
+      <div class="sync-badge" id="sync-status-badge">
+        <span class="sync-dot"></span>
+        <span id="sync-status-text">Local Ready</span>
+      </div>
+    </header>
+
+    <!-- Zmindset Pill Navigation -->
+    <nav class="nav-pills">
+      <button class="nav-pill active" data-view="overview" onclick="switchView('overview')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Overview
+      </button>
+      <button class="nav-pill" data-view="create" onclick="switchView('create')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Create Chat
+      </button>
+      <button class="nav-pill" data-view="templates" onclick="switchView('templates')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Tambah Template
+      </button>
+      <button class="nav-pill" data-view="settings" onclick="switchView('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <!-- ================= VIEW 1: OVERVIEW DASHBOARD ================= -->
+    <section id="view-overview" class="view-panel active">
+      <div class="hero-section">
+        <div>
+          <div class="date-kicker" id="live-date-kicker">TODAY</div>
+          <h1 class="hero-title">Your pipeline starts here.</h1>
+          <p class="hero-sub">Kelola seluruh draf cold outreach biro arsitektur ZIGFT Studio.</p>
+        </div>
+        <button class="btn-primary" onclick="switchView('create')">
+          <span>+ Create Chat</span>
+        </button>
+      </div>
+
+      <!-- Zmindset Style Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Generated Chats</span>
+            <span>✓</span>
+          </div>
+          <div class="metric-value" id="stat-total-chats">0</div>
+          <div class="metric-foot">Total biro diarsipkan</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Study Case Templates</span>
+            <span>⚡</span>
+          </div>
+          <div class="metric-value" id="stat-total-templates">0</div>
+          <div class="metric-foot">Siap dirender otomatis</div>
+        </div>
+      </div>
+
+      <!-- History Section -->
+      <div class="section-head">
+        <span class="section-title">Riwayat Chat Tersimpan</span>
+        <button class="btn-secondary" style="font-size: 12px; padding: 6px 10px;" onclick="switchView('create')">+ Baru</button>
+      </div>
+
+      <div id="history-list" class="history-list"></div>
+
+      <!-- Detail Viewer for Selected History Card -->
+      <div id="history-detail-box" style="display:none; margin-top: 24px;">
+        <div class="section-head">
+          <span class="section-title" id="detail-studio-heading">Detail Chat</span>
+          <button class="btn-secondary" style="font-size: 12px; padding: 6px 10px;" onclick="closeHistoryDetail()">Tutup ✕</button>
+        </div>
+        <div id="history-bubbles-output" class="bubbles-container"></div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: CREATE CHAT FORM ================= -->
+    <section id="view-create" class="view-panel">
+      <div class="hero-section">
+        <div>
+          <div class="date-kicker">OUTREACH GENERATOR</div>
+          <h1 class="hero-title">Create Chat</h1>
+          <p class="hero-sub">Isi parameter observasi biro untuk merender 5 bubble siap kirim.</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-group">
+          <label class="form-label" for="input-biro">Nama Biro Arsitektur</label>
+          <input type="text" id="input-biro" class="form-input" placeholder="Contoh: Serasa Architect" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Jam Chat Sekarang</label>
+          <div class="choice-grid" id="time-choice-grid">
+            <button type="button" class="choice-btn selected" data-value="pagi" onclick="selectTime('pagi', this)">Pagi</button>
+            <button type="button" class="choice-btn" data-value="siang" onclick="selectTime('siang', this)">Siang</button>
+            <button type="button" class="choice-btn" data-value="sore" onclick="selectTime('sore', this)">Sore</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Study Case (Pilih dari Database Template)</label>
+          <div class="choice-grid" id="studycase-choice-grid"></div>
+        </div>
+
+        <div class="form-group" id="website-link-group">
+          <label class="form-label" for="input-website">Link Website Biro (Jika Study Case Membahas Website)</label>
+          <input type="text" id="input-website" class="form-input" placeholder="Contoh: serasa.id" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="input-post-date">Tanggal / Jam Postingan yang di-Mention</label>
+          <input type="text" id="input-post-date" class="form-input" placeholder="Contoh: 10 November 2026 atau 17 jam yang lalu" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="input-post-topic">Isi Postingan yang Dibahas</label>
+          <input type="text" id="input-post-topic" class="form-input" placeholder="Contoh: desain rumah modern DASWARA HOUSE" />
+        </div>
+
+        <button type="button" class="btn-primary" style="width: 100%; padding: 13px;" onclick="generateAndSaveChat()">
+          Create Chat & Render 5 Bubbles
+        </button>
+      </div>
+
+      <!-- Rendered Output Bubbles -->
+      <div id="generated-output-wrapper" style="display:none;">
+        <div class="section-head">
+          <span class="section-title">Hasil Render Chat (Siap Salin)</span>
+          <span class="hc-badge" id="rendered-label-badge">Tersimpan</span>
+        </div>
+        <div id="generated-bubbles-output" class="bubbles-container"></div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: TAMBAH & KELOLA TEMPLATE ================= -->
+    <section id="view-templates" class="view-panel">
+      <div class="hero-section">
+        <div>
+          <div class="date-kicker">TEMPLATE DATABASE</div>
+          <h1 class="hero-title">Tambah Template</h1>
+          <p class="hero-sub">Simpan studi kasus baru untuk Bubble 3 agar otomatis terbaca di form Create Chat.</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <input type="hidden" id="edit-template-id" value="" />
+        <div class="form-group">
+          <label class="form-label" for="tpl-label">Label Study Case</label>
+          <input type="text" id="tpl-label" class="form-input" placeholder="Contoh: Website Terlalu Sederhana / Polos" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tpl-body">Teks Template (Bubble 3)</label>
+          <div class="chip-row">
+            <button type="button" class="token-chip" onclick="insertToken('[nama biro]')">+ [nama biro]</button>
+            <button type="button" class="token-chip" onclick="insertToken('[link website]')">+ [link website]</button>
+          </div>
+          <textarea id="tpl-body" class="form-textarea" placeholder="Tulis isi teks Bubble 3 di sini menggunakan placeholder [nama biro]..."></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn-primary" style="flex:1;" onclick="saveTemplate()">Simpan Template</button>
+          <button type="button" class="btn-secondary" id="cancel-edit-tpl-btn" style="display:none;" onclick="resetTemplateForm()">Batal</button>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <span class="section-title">Daftar Template Study Case di Database</span>
+      </div>
+      <div id="template-list" class="history-list"></div>
+    </section>
+
+    <!-- ================= VIEW 4: SETTINGS & CLOUD SYNC ================= -->
+    <section id="view-settings" class="view-panel">
+      <div class="hero-section">
+        <div>
+          <div class="date-kicker">SYSTEM & PERSISTENCE</div>
+          <h1 class="hero-title">Settings</h1>
+          <p class="hero-sub">Konfigurasi logo, cadangan data JSON, dan sinkronisasi opsional Supabase.</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="section-title" style="margin-bottom: 8px;">Backup & Restore Manual (Anti-Hilang)</div>
+        <p class="hero-sub" style="margin-bottom: 14px;">Unduh seluruh riwayat chat dan template ke file JSON atau pulihkan kapan saja.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn-secondary" onclick="exportBackupJSON()">⬇ Export Data (.json)</button>
+          <label class="btn-secondary" style="cursor:pointer;">
+            ⬆ Import Data (.json)
+            <input type="file" accept=".json" style="display:none;" onchange="importBackupJSON(event)" />
+          </label>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="section-title" style="margin-bottom: 6px;">Supabase Cloud Sync (Opsional)</div>
+        <p class="hero-sub" style="margin-bottom: 14px;">Secara default data tersimpan permanen di memori lokal browser. Isi kredensial Supabase di bawah jika ingin sinkronisasi lintas perangkat (HP & PC Warnet). Buat tabel <code>zigft_kv</code> dengan kolom <code>id (text, primary key)</code> dan <code>payload (jsonb)</code>.</p>
+        <div class="form-group">
+          <label class="form-label" for="sb-url">Supabase Project URL</label>
+          <input type="text" id="sb-url" class="form-input" placeholder="https://xyzcompany.supabase.co" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sb-key">Supabase Anon Public Key</label>
+          <input type="password" id="sb-key" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." />
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn-primary" onclick="saveSupabaseConfig()">Simpan & Sync Cloud</button>
+          <button type="button" class="btn-secondary" onclick="pullFromSupabase()">Tarik Data Cloud</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. KONFIGURASI LOGO & BRANDING (GANTI FILE logo.png DI ROOT GITHUB REPO)
+       ========================================================================= */
+    const ZIGFT_CONFIG = {
+      LOGO_PATH: "./logo.png", // Upload logo ZIGFT Studio lu dengan nama logo.png di GitHub
+      APP_NAME: "ZIGFT Outreach",
+      APP_TAG: "AGENCY OS"
+    };
+
+    // Render Logo ke Loading Screen & Top Header dengan fallback SVG mewah jika logo.png belum diupload
+    function mountBrandLogos() {
+      document.getElementById("header-app-name").textContent = ZIGFT_CONFIG.APP_NAME;
+      document.getElementById("header-app-tag").textContent = ZIGFT_CONFIG.APP_TAG;
+
+      const fallbackSVG = `
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="#F4F4F5" stroke-width="1.5" stroke-opacity="0.35"/>
+          <path d="M10 11H22L10 21H22" stroke="#F4F4F5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
+
+      ["loader-logo-container", "header-logo-container"].forEach((id) => {
+        const container = document.getElementById(id);
+        const img = new Image();
+        img.src = ZIGFT_CONFIG.LOGO_PATH;
+        img.alt = "ZIGFT Studio Logo";
+        img.onload = () => {
+          container.innerHTML = "";
+          container.appendChild(img);
+        };
+        img.onerror = () => {
+          container.innerHTML = fallbackSVG;
+        };
+      });
+    }
+
+    /* =========================================================================
+       2. DEFAULT STUDY CASE TEMPLATES DATABASE
+       ========================================================================= */
+    const DEFAULT_TEMPLATES = [
+      {
+        id: "tpl_no_web",
+        label: "Tidak Ada Website",
+        body: `namun, setelah kami melakukan observasi, kami menemukan ada peluang yang bisa dimaksimalkan, yaitu ketiadaan website resmi dari [nama biro] yang padahal website adalah salah satu elemen krusial untuk biro arsitek sebesar [nama biro] dalam membangun kredibilitas serta kepercayaan calon client serta tempat di mana biro arsitektur memamerkan portofolionya secara terstruktur.\n\nkami menawarkan sebuah solusi, yaitu kami akan membuatkan [nama biro] sebuah website resmi untuk meningkatkan kredibilitas dan kepercayaan dari client serta kami akan menyusun semua portofolio dari [nama biro] secara terstruktur dengan kualitas yang sangat baik dalam waktu pengerjaan yang relatif singkat, yaitu sekitar 3-7 hari pengerjaan. maukah saya tunjukkan contoh website demonya?`
+      },
+      {
+        id: "tpl_linktree_no_web",
+        label: "Panel Terpisah di Linktree, Tidak Ada Website",
+        body: `namun, setelah kami melakukan observasi, kami menemukan beberapa peluang yang bisa dimaksimalkan, terutama dalam hal kepraktisan calon client dalam mengakses berbagai fitur serta informasi yang dibutuhkan karena terpecah ke beberapa panel atau tombol dalam linktree dan juga ketidaktersediaannya website serta portofolio yang disajikan secara terstruktur.\n\nmaka, kami dari ZIGFT Studio menawarkan solusi yaitu kami akan membuatkan website resmi untuk [nama biro] yang sudah dilengkapi semua fitur yang ada di dalam linktree dari [nama biro] akan dibuat menjadi satu kesatuan agar memberikan kepraktisan dari calon client dalam mengakses informasi yang mereka butuhkan serta menyusun portofolio dari [nama biro] secara rapi dan profesional dengan waktu pengerjaan yang relatif cepat, yaitu sekitar 3-7 hari pengerjaan. maukah saya tunjukkan contoh website demonya sebagai bahan referensi visual?`
+      },
+      {
+        id: "tpl_linktree_has_web",
+        label: "Panel Terpisah di Linktree Tapi Ada Website",
+        body: `namun, setelah kami melakukan observasi pada [link website] dan bio profile dari [nama biro], kami menemukan beberapa peluang yang bisa dimaksimalkan, terutama dalam hal kepraktisan calon client karena akses informasi masih terpecah ke beberapa panel tombol dalam linktree dan belum terintegrasi penuh ke dalam website utama [nama biro].\n\nmaka, kami menawarkan solusi untuk menyatukan seluruh akses layanan dari linktree tersebut ke dalam struktur website resmi [nama biro] yang lebih modern dan terpusat, sehingga calon client dapat melihat portofolio sekaligus menghubungi tim dengan jauh lebih praktis. maukah saya tunjukkan contoh website demonya sebagai bahan referensi visual?`
+      },
+      {
+        id: "tpl_simple_web",
+        label: "Website Terlalu Sederhana / Polos",
+        body: `Namun, setelah kami melakukan observasi pada website [link website], kami menemukan ada beberapa peluang yang bisa dimaksimalkan, terutama dalam hal tampilan halaman utama dan penyajian karya yang menurut kami masih terlalu polos dan sederhana sehingga belum menampilkan 100% kemewahan serta karakter eksklusif dari [nama biro], ditambah lagi tidak adanya pengantar profil maupun penjelasan detail terkait layanan apa saja yang disediakan oleh [nama biro].\n\njadi kami memberikan solusi berupa merancang ulang tampilan website tersebut menjadi suatu platform yang lebih modern dan terstruktur, tempat para calon client langsung disambut pengantar studio, melihat berbagai macam karya indah dari [nama biro] secara eksklusif, sekaligus dapat memahami layanan apa saja yang disediakan oleh [nama biro] yang dapat meningkatkan kredibilitas serta kesan profesionalisme di mata calon client.\nmau saya tunjukkan contoh website demonya?`
+      }
+    ];
+
+    /* =========================================================================
+       3. STATE MANAGEMENT & DUAL PERSISTENCE (LOCALSTORAGE + SUPABASE)
+       ========================================================================= */
+    const STORAGE_KEYS = {
+      TEMPLATES: "zigft_outreach_templates_v1",
+      HISTORY: "zigft_outreach_history_v1",
+      SB_CONFIG: "zigft_outreach_sb_v1"
+    };
+
+    let state = {
+      templates: [],
+      history: [],
+      selectedTime: "pagi",
+      selectedTemplateId: ""
+    };
+
+    function loadState() {
+      const savedTpl = localStorage.getItem(STORAGE_KEYS.TEMPLATES);
+      const savedHist = localStorage.getItem(STORAGE_KEYS.HISTORY);
+
+      state.templates = savedTpl ? JSON.parse(savedTpl) : [...DEFAULT_TEMPLATES];
+      state.history = savedHist ? JSON.parse(savedHist) : [];
+
+      if (!savedTpl) {
+        localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(state.templates));
+      }
+
+      if (state.templates.length > 0) {
+        state.selectedTemplateId = state.templates[0].id;
+      }
+
+      const sb = getSupabaseConfig();
+      if (sb.url && sb.key) {
+        document.getElementById("sb-url").value = sb.url;
+        document.getElementById("sb-key").value = sb.key;
+        updateSyncBadge("Cloud Connected", true);
+      }
+    }
+
+    async function persistState() {
+      localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(state.templates));
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(state.history));
+      renderAll();
+
+      const sb = getSupabaseConfig();
+      if (sb.url && sb.key) {
+        try {
+          updateSyncBadge("Syncing...", true);
+          await fetch(`${sb.url.replace(/\/$/, "")}/rest/v1/zigft_kv`, {
+            method: "POST",
+            headers: {
+              "apikey": sb.key,
+              "Authorization": `Bearer ${sb.key}`,
+              "Content-Type": "application/json",
+              "Prefer": "resolution=merge-duplicates"
+            },
+            body: JSON.stringify({
+              id: "zigft_main_store",
+              payload: { templates: state.templates, history: state.history }
+            })
+          });
+          updateSyncBadge("Cloud Synced", true);
+        } catch (err) {
+          updateSyncBadge("Local Saved", false);
+        }
+      }
+    }
+
+    function getSupabaseConfig() {
+      const raw = localStorage.getItem(STORAGE_KEYS.SB_CONFIG);
+      return raw ? JSON.parse(raw) : { url: "", key: "" };
+    }
+
+    function saveSupabaseConfig() {
+      const url = document.getElementById("sb-url").value.trim();
+      const key = document.getElementById("sb-key").value.trim();
+      localStorage.setItem(STORAGE_KEYS.SB_CONFIG, JSON.stringify({ url, key }));
+      persistState();
+      alert("Konfigurasi Cloud disimpan & data disinkronkan!");
+    }
+
+    async function pullFromSupabase() {
+      const sb = getSupabaseConfig();
+      if (!sb.url || !sb.key) return alert("Isi URL dan Anon Key Supabase terlebih dahulu.");
+      try {
+        const res = await fetch(`${sb.url.replace(/\/$/, "")}/rest/v1/zigft_kv?id=eq.zigft_main_store&select=payload`, {
+          headers: { "apikey": sb.key, "Authorization": `Bearer ${sb.key}` }
+        });
+        const rows = await res.json();
+        if (rows && rows[0] && rows[0].payload) {
+          state.templates = rows[0].payload.templates || state.templates;
+          state.history = rows[0].payload.history || state.history;
+          localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(state.templates));
+          localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(state.history));
+          renderAll();
+          updateSyncBadge("Cloud Pulled", true);
+          alert("Data berhasil ditarik dari Supabase!");
+        } else {
+          alert("Belum ada data tersimpan di tabel zigft_kv.");
+        }
+      } catch (e) {
+        alert("Gagal menarik data dari Supabase. Cek URL/Key & RLS policy.");
+      }
+    }
+
+    function updateSyncBadge(text, ok) {
+      document.getElementById("sync-status-text").textContent = text;
+      document.querySelector(".sync-dot").style.background = ok ? "#22C55E" : "#F59E0B";
+    }
+
+    /* =========================================================================
+       4. NAVIGATION & RENDER ENGINE
+       ========================================================================= */
+    function switchView(viewName) {
+      document.querySelectorAll(".view-panel").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-pill").forEach(el => el.classList.remove("active"));
+
+      document.getElementById(`view-${viewName}`).classList.add("active");
+      document.querySelector(`.nav-pill[data-view="${viewName}"]`).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function selectTime(val, btnEl) {
+      state.selectedTime = val;
+      document.querySelectorAll("#time-choice-grid .choice-btn").forEach(b => b.classList.remove("selected"));
+      btnEl.classList.add("selected");
+    }
+
+    function selectStudyCase(id) {
+      state.selectedTemplateId = id;
+      renderStudyCaseChoices();
+    }
+
+    function renderStudyCaseChoices() {
+      const grid = document.getElementById("studycase-choice-grid");
+      grid.innerHTML = state.templates.map(tpl => `
+        <button type="button"
+          class="choice-btn ${tpl.id === state.selectedTemplateId ? "selected" : ""}"
+          onclick="selectStudyCase('${tpl.id}')">
+          ${escapeHtml(tpl.label)}
+        </button>
+      `).join("");
+    }
+
+    function fillPlaceholders(rawText, data) {
+      let out = rawText;
+      out = out.replace(/\[\s*nama\s*biro\s*\]/gi, data.biro);
+      out = out.replace(/\[\s*tanggal\s*\/?\s*jam\s*posting(?:an)?\s*\]/gi, data.postDate);
+      out = out.replace(/\[\s*isi\s*postingan\s*\]/gi, data.postTopic);
+      out = out.replace(/\[\s*link\s*website\s*\]/gi, data.website || "website resmi");
+      out = out.replace(/\[\s*jam\s*\]/gi, data.time);
+      return out;
+    }
+
+    function buildFiveBubbles(data) {
+      const tplObj = state.templates.find(t => t.id === data.templateId) || state.templates[0];
+      const timeCap = data.time.charAt(0).toUpperCase() + data.time.slice(1);
+
+      const bubble1 = `selamat ${data.time} bapak atau ibu tim ${data.biro}, saya idris dari ZIGFT studio. apakah saya berbicara dengan admin atau perwakilan management terkait?`;
+
+      const bubble2 = `oke bapak/ibu dari tim ${data.biro} terima kasih atas responsnya. sebelum pembicaraan berlanjut, izinkan saya memperkenalkan diri jelas. Perkenalkan saya Idris dari ZIGFT Studio, sebuah digital agency yang berfokus pada pengembangan portofolio untuk biro architecture dan interior design studio agar meningkatkan kredibilitas dan juga memperkuat kepercayaan calon client melalui sebuah website.\n\njadi, kami tadi melihat salah satu postingan dari ${data.biro} yang diposting pada ${data.postDate} yang berisi tentang ${data.postTopic} yang menurut kami memberikan kesan bahwa ${data.biro} sangat kompeten dan profesional serta sangat detail sekali dalam mengerjakan sebuah project.\n\nmaka, kami melakukan observasi ke profile instagram dari ${data.biro} untuk melihat bagaimana ${data.biro} menyusun portofolionya.`;
+
+      const bubble3 = fillPlaceholders(tplObj ? tplObj.body : "", data);
+
+      const bubble4 = `baik, ini dia contoh website demo yang sudah kami siapkan untuk sebagai bahan referensi dan pertimbangan oleh tim dari ${data.biro} :\n\nhttps://v0-sena-studio.vercel.app/\n\n\nkami menggunakan nama studio fiktif yaitu Sena studio sebagai tema utama dari demo website yang kami bangun dan siapkan untuk tim ${data.biro}. untuk pembuatan website resmi dari ${data.biro} kami akan membuatkannya dengan tema dan gaya khusus sesuai ciri khas dari ${data.biro}. setelah tim dari ${data.biro} meninjau tautan tersebut, kami ingin mengetahui apakah ada bagian atau gaya tema yang sesuai dengan kebutuhan dari ${data.biro}?`;
+
+      const bubble5 = `Selamat ${data.time} Bapak/Ibu tim dari ${data.biro}. Izin untuk menindaklanjuti chat kami sebelumnya, apakah Bapak/Ibu dari tim ${data.biro} bersedia atau sudah melihat contoh website yang sudah kami siapkan?`;
+
+      return [
+        { title: "Bubble 1 — Pembuka (Ketuk Pintu)", text: bubble1 },
+        { title: "Bubble 2 — Setelah Direspon Biro", text: bubble2 },
+        { title: `Bubble 3 — Study Case (${tplObj ? tplObj.label : "Custom"})`, text: bubble3 },
+        { title: "Bubble 4 — Kirim Website Demo", text: bubble4 },
+        { title: "Bubble 5 — Follow Up", text: bubble5 }
+      ];
+    }
+
+    function generateAndSaveChat() {
+      const biro = document.getElementById("input-biro").value.trim();
+      const postDate = document.getElementById("input-post-date").value.trim();
+      const postTopic = document.getElementById("input-post-topic").value.trim();
+      const website = document.getElementById("input-website").value.trim();
+
+      if (!biro || !postDate || !postTopic) {
+        alert("Lengkapi Nama Biro, Tanggal/Jam Postingan, dan Isi Postingan terlebih dahulu.");
+        return;
+      }
+
+      const tplObj = state.templates.find(t => t.id === state.selectedTemplateId) || state.templates[0];
+      const entry = {
+        id: "chat_" + Date.now(),
+        biro,
+        time: state.selectedTime,
+        templateId: tplObj.id,
+        studyCaseLabel: tplObj.label,
+        website,
+        postDate,
+        postTopic,
+        createdAt: new Date().toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+      };
+
+      state.history.unshift(entry);
+      persistState();
+
+      const bubbles = buildFiveBubbles(entry);
+      renderBubblesToContainer("generated-bubbles-output", bubbles);
+      document.getElementById("rendered-label-badge").textContent = `${biro} • Tersimpan`;
+      document.getElementById("generated-output-wrapper").style.display = "block";
+      document.getElementById("generated-output-wrapper").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function renderBubblesToContainer(containerId, bubbles) {
+      const box = document.getElementById(containerId);
+      box.innerHTML = bubbles.map((b, idx) => {
+        const uid = `${containerId}_b_${idx}`;
+        return `
+          <div class="bubble-card">
+            <div class="bubble-head">
+              <span class="bubble-tag">${escapeHtml(b.title)}</span>
+              <button type="button" class="copy-btn" onclick="copyBubbleText('${uid}', this)">
+                Copy Text
+              </button>
+            </div>
+            <div class="bubble-body" id="${uid}">${escapeHtml(b.text)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function copyBubbleText(elementId, btn) {
+      const text = document.getElementById(elementId).innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        const orig = btn.innerHTML;
+        btn.classList.add("copied");
+        btn.innerHTML = "✓ Copied";
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          btn.innerHTML = orig;
+        }, 1600);
+      } catch (err) {
+        alert("Gagal menyalin otomatis. Silakan salin manual dari kotak teks.");
+      }
+    }
+
+    /* =========================================================================
+       5. DASHBOARD HISTORY & TEMPLATE CRUD
+       ========================================================================= */
+    function renderHistoryList() {
+      const list = document.getElementById("history-list");
+      document.getElementById("stat-total-chats").textContent = state.history.length;
+      document.getElementById("stat-total-templates").textContent = state.templates.length;
+
+      if (state.history.length === 0) {
+        list.innerHTML = `<div class="empty-state">Belum ada riwayat chat yang dibuat. Klik tombol <strong>+ Create Chat</strong> untuk membuat outreach pertama.</div>`;
+        return;
+      }
+
+      list.innerHTML = state.history.map(item => `
+        <div class="history-card">
+          <div class="hc-top">
+            <div class="hc-studio">${escapeHtml(item.biro)}</div>
+            <span class="hc-badge">${escapeHtml(item.studyCaseLabel)}</span>
+          </div>
+          <div class="hc-meta">
+            Post: ${escapeHtml(item.postDate)} (${escapeHtml(item.postTopic)}) • Dibuat ${escapeHtml(item.createdAt)}
+          </div>
+          <div class="hc-actions">
+            <button type="button" class="btn-secondary" onclick="openHistoryDetail('${item.id}')">Lihat 5 Bubble</button>
+            <button type="button" class="btn-secondary btn-danger" onclick="deleteHistory('${item.id}')">Hapus</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openHistoryDetail(id) {
+      const item = state.history.find(h => h.id === id);
+      if (!item) return;
+      document.getElementById("detail-studio-heading").textContent = `Outreach: ${item.biro}`;
+      renderBubblesToContainer("history-bubbles-output", buildFiveBubbles(item));
+      const box = document.getElementById("history-detail-box");
+      box.style.display = "block";
+      box.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function closeHistoryDetail() {
+      document.getElementById("history-detail-box").style.display = "none";
+    }
+
+    function deleteHistory(id) {
+      if (!confirm("Hapus riwayat chat biro ini?")) return;
+      state.history = state.history.filter(h => h.id !== id);
+      closeHistoryDetail();
+      persistState();
+    }
+
+    /* Template Management */
+    function insertToken(token) {
+      const ta = document.getElementById("tpl-body");
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      ta.value = ta.value.substring(0, start) + token + ta.value.substring(end);
+      ta.focus();
+      ta.selectionStart = ta.selectionEnd = start + token.length;
+    }
+
+    function saveTemplate() {
+      const editId = document.getElementById("edit-template-id").value;
+      const label = document.getElementById("tpl-label").value.trim();
+      const body = document.getElementById("tpl-body").value.trim();
+
+      if (!label || !body) {
+        alert("Isi Label Study Case dan Teks Template terlebih dahulu.");
+        return;
+      }
+
+      if (editId) {
+        const idx = state.templates.findIndex(t => t.id === editId);
+        if (idx !== -1) {
+          state.templates[idx].label = label;
+          state.templates[idx].body = body;
+        }
+      } else {
+        const newTpl = { id: "tpl_" + Date.now(), label, body };
+        state.templates.push(newTpl);
+        state.selectedTemplateId = newTpl.id;
+      }
+
+      resetTemplateForm();
+      persistState();
+      alert("Template Study Case berhasil disimpan ke database!");
+    }
+
+    function editTemplate(id) {
+      const tpl = state.templates.find(t => t.id === id);
+      if (!tpl) return;
+      document.getElementById("edit-template-id").value = tpl.id;
+      document.getElementById("tpl-label").value = tpl.label;
+      document.getElementById("tpl-body").value = tpl.body;
+      document.getElementById("cancel-edit-tpl-btn").style.display = "inline-flex";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetTemplateForm() {
+      document.getElementById("edit-template-id").value = "";
+      document.getElementById("tpl-label").value = "";
+      document.getElementById("tpl-body").value = "";
+      document.getElementById("cancel-edit-tpl-btn").style.display = "none";
+    }
+
+    function deleteTemplate(id) {
+      if (state.templates.length <= 1) return alert("Minimal harus tersisa 1 template aktif.");
+      if (!confirm("Hapus template study case ini?")) return;
+      state.templates = state.templates.filter(t => t.id !== id);
+      if (state.selectedTemplateId === id) {
+        state.selectedTemplateId = state.templates[0].id;
+      }
+      persistState();
+    }
+
+    function renderTemplateList() {
+      const list = document.getElementById("template-list");
+      list.innerHTML = state.templates.map(tpl => `
+        <div class="history-card">
+          <div class="hc-top">
+            <div class="hc-studio">${escapeHtml(tpl.label)}</div>
+            <span class="hc-badge">Bubble 3</span>
+          </div>
+          <div class="hc-meta" style="white-space: pre-wrap; max-height: 72px; overflow: hidden;">${escapeHtml(tpl.body)}</div>
+          <div class="hc-actions">
+            <button type="button" class="btn-secondary" onclick="editTemplate('${tpl.id}')">Edit</button>
+            <button type="button" class="btn-secondary btn-danger" onclick="deleteTemplate('${tpl.id}')">Hapus</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /* Export & Import JSON */
+    function exportBackupJSON() {
+      const blob = new Blob([JSON.stringify({ templates: state.templates, history: state.history }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `zigft-outreach-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.templates) state.templates = parsed.templates;
+          if (parsed.history) state.history = parsed.history;
+          persistState();
+          alert("Data backup berhasil dipulihkan!");
+        } catch (err) {
+          alert("Format file JSON tidak valid.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderAll() {
+      renderHistoryList();
+      renderStudyCaseChoices();
+      renderTemplateList();
+    }
+
+    /* =========================================================================
+       6. INIT & PWA SERVICE WORKER REGISTRATION
+       ========================================================================= */
+    window.addEventListener("DOMContentLoaded", () => {
+      mountBrandLogos();
+
+      const now = new Date();
+      document.getElementById("live-date-kicker").textContent = now.toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric"
+      }).toUpperCase();
+
+      loadState();
+      renderAll();
+
+      // Dismiss Luxury Loading Screen smoothly
+      setTimeout(() => {
+        document.getElementById("zigft-loader").classList.add("hidden");
+      }, 1150);
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      }
+    });
+  </script>
+</body>
+</html>
