@@ -1,24 +1,27 @@
 {
   "name": "ZIGFT Outreach — Agency OS",
-  "short_name": "ZIGFT Outreach",
+  "short_name": "ZIGFT OS",
   "description": "Cold Outreach Template Generator & Pipeline Tracker untuk ZIGFT Studio",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#181818",
   "theme_color": "#181818",
-  "orientation": "portrait",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "./logo.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "./logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
