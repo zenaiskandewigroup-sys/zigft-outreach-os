@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.zigft_studio_agency.twa",
+    "sha256_cert_fingerprints": ["58:50:83:B8:D7:10:41:DF:0E:32:6C:6A:C3:79:82:DB:E6:0E:7B:E1:A7:DB:F5:7D:14:00:3C:D0:85:AD:24:CC"]
+  }
+}]
